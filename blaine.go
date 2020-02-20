@@ -27,6 +27,7 @@ func GetIP(r *http.Request) string {
 }
 
 func root(w http.ResponseWriter, req *http.Request) {
+	log.Println("Processing request")
 	redisClient := redis.NewClient(&redis.Options{
 		Addr: os.Getenv("REDIS_URL"),
 	})
@@ -40,7 +41,10 @@ func root(w http.ResponseWriter, req *http.Request) {
 		log.Println(err)
 	}
 
-	redisClient.RPush(REDIS_KEY, visitJSON)
+	err = redisClient.RPush(REDIS_KEY, visitJSON).Err()
+	if err != nil {
+		log.Println(err)
+	}
 
 	http.Redirect(w, req, os.Getenv("TARGET_URL"), 301)
 }

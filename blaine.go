@@ -28,9 +28,13 @@ func GetIP(r *http.Request) string {
 
 func root(w http.ResponseWriter, req *http.Request) {
 	log.Println("Processing request")
-	redisClient := redis.NewClient(&redis.Options{
-		Addr: os.Getenv("REDIS_URL"),
-	})
+	opt, err := redis.ParseURL(os.Getenv("REDIS_URL"))
+	if err != nil {
+		log.Println(err)
+	}
+
+	redisClient := redis.NewClient(opt)
+
 	visit := new(Visit)
 	visit.Time = time.Now()
 	visit.IpAddress = GetIP(req)

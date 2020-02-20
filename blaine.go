@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/go-redis/redis/v7"
+	"log"
 	"net/http"
 	"os"
 	"time"
@@ -37,7 +37,7 @@ func root(w http.ResponseWriter, req *http.Request) {
 
 	visitJSON, err := json.Marshal(visit)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 	}
 
 	redisClient.RPush(REDIS_KEY, visitJSON)
@@ -51,7 +51,7 @@ func main() {
 		log.Fatal("$PORT must be set")
 	}
 
-	fmt.Println("Starting server...")
+	log.Println("Starting server...")
 	http.HandleFunc("/", root)
 
 	http.ListenAndServe(":"+port, nil)

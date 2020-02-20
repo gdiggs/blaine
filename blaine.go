@@ -46,8 +46,13 @@ func root(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
+
 	fmt.Println("Starting server...")
 	http.HandleFunc("/", root)
 
-	http.ListenAndServe(":8090", nil)
+	http.ListenAndServe(":"+port, nil)
 }
